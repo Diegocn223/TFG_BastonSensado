@@ -2,7 +2,7 @@
 
 
 % Cargar datos
-load('2.mat'); % Sacados de los bubles en "AnalisisProfundo"
+load('1.mat'); % Sacados de los bubles en "AnalisisProfundo"
 
 % Parámetros de los ejes
 x_vals = 1:6;              % Cantidad de estimulos

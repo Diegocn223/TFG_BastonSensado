@@ -16,7 +16,7 @@ if (exist(path_audio,'file'))
         disp(['Audio encontrado y cargado: ',path_audio]);
 else
     %[audio,secuencia,fs]=genAudio(total_time,initial_silence,silence_duration,event_duration)
-     [audio,secuencia,fs]=genAudio(    180   ,       60      ,     [5,25]     ,    [5]    ); 
+     [audio,secuencia,fs]=genAudio(    180   ,       60      ,     [5,15]     ,    [5]    ); 
 
     save(path_audio,'audio','secuencia','fs');
         disp(['Audio creado y guardado: ',path_audio]);

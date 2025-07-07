@@ -30,7 +30,7 @@ for i = 1:numel(campos)
     for k=1:n_ventanas
         for j = 1:(numel(caracs)-4)
             carac=caracs{j};
-            mediaFeatures.(campo).(carac)(k)=mean(CaracAll.(campo).(carac)(k:n_ventanas:end));
+            mediaFeatures.(campo).(carac)(k)=median(CaracAll.(campo).(carac)(k:n_ventanas:end));
             iqrFeatures.(campo).(carac)(k,:)=[quantile(CaracAll.(campo).(carac)(k:n_ventanas:end),0.25) quantile(CaracAll.(campo).(carac)(k:n_ventanas:end),0.75)];
         end
     end

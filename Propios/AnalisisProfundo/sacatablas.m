@@ -8,18 +8,25 @@ dataStruct = loadAllData(Parado); % Parado: 0 (movimiento), 1 (parado)
 recuento_par = NaN(12,6);
 recuento_ind = NaN(12,6);
 
+sumatorio_caracs_cane = 0;
+sumatorio_caracs_dif_cane = 0;
+sumatorio_caracs_empatica = 0;
+sumatorio_caracs_dif_empatica = 0;
+sumatorio_caracs_SYSP = 0;
+sumatorio_caracs_dif_SYSP = 0;
+
 sumatorio_caracs = 0;
 sumatorio_caracs_dif = 0;
 
 %% Duración de la ventana [s] (Si se pone un vector de ventanas es para el mapa de calor)
 inc_t = 5;
 i_vec=inc_t:inc_t:60;
-%i_vec=5;
+%i_vec=10;
 
 
 %% Array de eventos a considerar (Si se pone un vector de ventanas es para el mapa de calor)
 j_vec=[[1 0 0 0 0 0];[1 2 0 0 0 0];[1 2 3 0 0 0];[1 2 3 4 0 0];[1 2 3 4 5 0];[1 2 3 4 5 6]]';
-%j_vec=[1 2 3 4 5]';
+%j_vec=[1]';
 
 %% Seleccionar los participantes a eleminar (sustituir array o crear uno nuevo en la parte inferior de esta zona)
 % Selección de paticipantes
@@ -30,6 +37,9 @@ mean5p10s=[2 3 6 8 10 15 16 18]; % Eliminar tantos quiere decir que no es tan de
 cane6e2s=[2 3 6 10 11 18];
 empatica1e60s = [5 6 11 14 16]; %Se probó a eliminar varios sujetos y eliminar esta combinación fue la mejor
 descarte_GSR= [3 8 10 13 14 15 16 18];
+descarte_PPG= [1 7 11 13 14 17];
+
+compartido_exp=[1 7 9 10 11 12 13 14 15 16 17 18 19 20];
 
 % Segun parecido entre MiAlgoritmo y SYSP
 buenos=[9 6 19 15];
@@ -43,9 +53,9 @@ empatica_clas = [2 1 2 1 1 2 2 1 2 3 2 3 1 1 2 3 2 1];
 
 if Parado~=0
     datos_usados = union(todos(cane_clas==3 | empatica_clas==3),ninguno); 
-    datos_usados =[];   % <<<----- Poner array de vectores a eliminar
+    datos_usados = compartido_exp;   % <<<----- Poner array de vectores a eliminar
 else
-    datos_usados = ninguno;                                                 % <<<-----Poner array de vectores a eliminar
+    datos_usados = compartido_exp;                                                 % <<<-----Poner array de vectores a eliminar
 end
 participantesRechazados=datos_usados;
 
@@ -54,7 +64,7 @@ contador=0;
 for i = i_vec
 tiempo_ventana=[i i];
 for j = j_vec
-    if(i>(120-sum(j~=0)*(15+5)))
+    if(i>=(120-sum(j~=0)*(15+5))+20)%condición más restrictiva posible
         continue %Recorte de la ventana
     end
 idx_estimulo=[nonzeros(j)];
@@ -83,6 +93,13 @@ end
 recuento_ind(i/inc_t,sum(j~=0)) = sum([tablasSignificancia.cane.Significancia;tablasSignificancia.SYSP.Significancia;tablasSignificancia.empatica.Significancia]);
 recuento_par(i/inc_t,sum(j~=0)) = sum([tablasSignificancia.cane.Significancia_Dif;tablasSignificancia.SYSP.Significancia_Dif;tablasSignificancia.empatica.Significancia_Dif]);
 
+sumatorio_caracs_cane = sumatorio_caracs_cane + [tablasSignificancia.cane.Significancia]';
+sumatorio_caracs_dif_cane = sumatorio_caracs_dif_cane + [tablasSignificancia.cane.Significancia_Dif]';
+sumatorio_caracs_empatica = sumatorio_caracs_empatica + [tablasSignificancia.empatica.Significancia]';
+sumatorio_caracs_dif_empatica = sumatorio_caracs_dif_empatica + [tablasSignificancia.empatica.Significancia_Dif]';
+sumatorio_caracs_SYSP = sumatorio_caracs_SYSP + [logical([0;0;0;0;0;0;0;0;0;tablasSignificancia.SYSP.Significancia;0;0;0])]';
+sumatorio_caracs_dif_SYSP = sumatorio_caracs_dif_SYSP + [logical([0;0;0;0;0;0;0;0;0;tablasSignificancia.SYSP.Significancia_Dif;0;0;0])]';
+
 sumatorio_caracs = sumatorio_caracs + sum([tablasSignificancia.cane.Significancia,tablasSignificancia.empatica.Significancia,logical([0;0;0;0;0;0;0;0;0;tablasSignificancia.SYSP.Significancia;0;0;0])]');
 sumatorio_caracs_dif = sumatorio_caracs_dif + sum([tablasSignificancia.cane.Significancia_Dif,tablasSignificancia.empatica.Significancia_Dif,logical([0;0;0;0;0;0;0;0;0;tablasSignificancia.SYSP.Significancia_Dif;0;0;0])]');
 
@@ -91,6 +108,13 @@ contador=contador+1;
 
 end
 end
+
+porcentaje_caracs_cane=ceil(sumatorio_caracs_cane./([1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]*contador)*100);
+porcentaje_caracs_dif_cane=ceil(sumatorio_caracs_dif_cane./([1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]*contador)*100);
+porcentaje_caracs_empatica=ceil(sumatorio_caracs_empatica./([1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]*contador)*100);
+porcentaje_caracs_dif_empatica=ceil(sumatorio_caracs_dif_empatica./([1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1]*contador)*100);
+porcentaje_caracs_SYSP=ceil(sumatorio_caracs_SYSP./([0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0]*contador)*100);
+porcentaje_caracs_dif_SYSP=ceil(sumatorio_caracs_dif_SYSP./([0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0]*contador)*100);
 
 porcentaje_caracs=ceil(sumatorio_caracs./([2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 2 2 2]*contador)*100);
 porcentaje_caracs_dif=ceil(sumatorio_caracs_dif./([2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3 2 2 2]*contador)*100);

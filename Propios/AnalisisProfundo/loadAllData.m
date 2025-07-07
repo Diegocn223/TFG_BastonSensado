@@ -2,13 +2,13 @@ function dataStruct = loadAllData(parado)
 
 
     if(parado==1)
-        basePath = "C:\Users\Usuario\Escritorio\TFG\TODOS\Participantes\Toma de datos (hasta 24-05-25)";
+        basePath = "../../data_Participantes/Toma de datos (hasta 24-05-25)";
         carpeta_data='signal';
     elseif (parado==2)
-        basePath = "C:\Users\Usuario\Escritorio\TFG\TODOS\Participantes\Toma de datos - filtrado (11-06-25)";
+        basePath = "../../data_Participantes/Toma de datos - filtrado (11-06-25)";
         carpeta_data='filt_signal';
     else
-        basePath = "C:\Users\Usuario\Escritorio\TFG\TODOS\Participantes\Toma de datos - Experimento cinta (13-06-25)";
+        basePath = "../../data_Participantes/Toma de datos - Experimento cinta (13-06-25)";
         carpeta_data='filt_signal';
     end
     % Inicializa el struct de salida
